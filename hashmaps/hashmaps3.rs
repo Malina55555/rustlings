@@ -14,11 +14,10 @@
 
 // Execute `rustlings hint hashmaps3` or use the `hint` watch subcommand for a hint.
 
-// I AM NOT DONE
-
 use std::collections::HashMap;
 
 // A structure to store team name and its goal details.
+#[derive(Debug, Clone)]
 struct Team {
     name: String,
     goals_scored: u8,
@@ -28,6 +27,7 @@ struct Team {
 fn build_scores_table(results: String) -> HashMap<String, Team> {
     // The name of the team is the key and its associated struct is the value.
     let mut scores: HashMap<String, Team> = HashMap::new();
+	
 
     for r in results.lines() {
         let v: Vec<&str> = r.split(',').collect();
@@ -35,6 +35,40 @@ fn build_scores_table(results: String) -> HashMap<String, Team> {
         let team_1_score: u8 = v[2].parse().unwrap();
         let team_2_name = v[1].to_string();
         let team_2_score: u8 = v[3].parse().unwrap();
+		
+		let t1 = Team {
+			name: team_1_name.clone(),
+			goals_scored: team_1_score,
+			goals_conceded: team_2_score,
+		};
+		let t2 = Team {
+			name: team_2_name.clone(),
+			goals_scored: team_2_score,
+			goals_conceded: team_1_score,
+		};
+		if scores.get(&team_1_name).is_some() {
+			let t1_1 = Team {
+				name: team_1_name.clone(),
+				goals_scored: scores.get(&team_1_name).unwrap().goals_scored + team_1_score,
+				goals_conceded: scores.get(&team_1_name).unwrap().goals_conceded + team_2_score,
+			};
+			scores.insert(team_1_name.clone(), t1_1);
+		} else {
+			scores.insert(team_1_name.clone(), t1);
+		}
+		if scores.get(&team_2_name).is_some() {
+			let t2_1 = Team {
+				name: team_2_name.clone(),
+				goals_scored: scores.get(&team_2_name).unwrap().goals_scored + team_2_score,
+				goals_conceded: scores.get(&team_2_name).unwrap().goals_conceded + team_1_score,
+			};
+			scores.insert(team_2_name.clone(), t2_1);
+		} else {
+			scores.insert(team_2_name.clone(), t2);
+		}
+		
+		
+		
         // TODO: Populate the scores table with details extracted from the
         // current line. Keep in mind that goals scored by team_1
         // will be the number of goals conceded from team_2, and similarly
@@ -52,8 +86,9 @@ mod tests {
         let results = "".to_string()
             + "England,France,4,2\n"
             + "France,Italy,3,1\n"
+			+ "Germany,England,2,1\n"
             + "Poland,Spain,2,0\n"
-            + "Germany,England,2,1\n";
+            ;
         results
     }
 
