@@ -14,8 +14,6 @@
 
 // Execute `rustlings hint quiz3` or use the `hint` watch subcommand for a hint.
 
-// I AM NOT DONE
-
 use std::fmt::Display;
 
 pub struct ReportCard {
@@ -26,8 +24,8 @@ pub struct ReportCard {
 
 impl ReportCard {
     pub fn print(&self) -> String {
-        format!("{} ({}) - achieved a grade of {:?}",
-            &self.student_name, &self.student_age, &self.grade)
+        format!("{} ({}) - achieved a grade of {}",
+            &self.student_name, &self.student_age, &self.grade.grrade())
     }
 }
 
@@ -40,7 +38,11 @@ pub enum StudentGrades {
 
 impl StudentGrades {
 	fn grrade (&self) -> String {
-	format!("{:?}", &self);
+		match self {
+			StudentGrades::Numeracle(q) => return q.to_string(),
+			StudentGrades::Alfabetical(w) => return w.to_string(),
+		}
+	return "Error".to_string()
 	}
 }
 
